@@ -276,7 +276,7 @@ class MainApp(MDApp):
        # self.theme_cls.theme_style = 'Dark'
         self.theme_cls.primary_palette = 'Blue'
         self.theme_cls.accent_palette = 'DeepPurple'
-        Window.clearcolor = (1,0,1,1)
+        #Window.clearcolor = (1,0,1,1)
         sm.add_widget(Fitnessapp())
         sm.add_widget(LoadingScreen())
         sm.current = "LoadingScreen"
