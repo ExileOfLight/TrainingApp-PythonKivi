@@ -56,13 +56,12 @@ class Fitnessapp(Screen):
         data_saved = [{}, [], {}, []]
         try:
             load_data(data_saved)
-        except:
-            load_default_data(data_saved)
-        glob.user_profile = data_saved[0]
-        glob.allfooditems = data_saved[1]
-        # glob.current_food_sum = data_saved[2]
-        glob.food_choices = data_saved[3]
-
+            glob.user_profile = data_saved[0]
+            glob.allfooditems = data_saved[1]
+            # glob.current_food_sum = data_saved[2]
+            glob.food_choices = data_saved[3]
+        except EOFError:
+            print('Loading defaults')
         self.show_recomend()
 
     def on_pre_enter(self):
@@ -78,6 +77,7 @@ class Fitnessapp(Screen):
 
 
     def show_recomend(self):
+        print(glob.allfooditems)
         glob.needed_macros = calculate_def_macros(glob.user_profile)
         self.ids.calories_show.text = "kkal\n" + str(glob.current_food_sum["calories"]) + "/" + str(
             glob.needed_macros[0])
@@ -114,7 +114,7 @@ class BoxButton(ToggleButtonBehavior, MDBoxLayout):
                 AmountAskPopup(widget=self).open()
             else:
                 self.change_current_food_sum(1)
-            self._md_bg_color = [0.5, 0.5, 0.5, 0.8]
+            self._md_bg_color = [0.7, 0.5, 0.5, 0.8]
 
         else:
             self._md_bg_color = [1, 1, 1, .5]
@@ -200,6 +200,7 @@ class FoodNavigationItem(MDBottomNavigationItem):
 
 
 
+
     def add_forms(self):
         self.needed_list.bind(minimum_height=self.setter("height"))
         for meal in glob.allfooditems[MainApp.counter:]:
@@ -232,11 +233,12 @@ class FoodNavigationItem(MDBottomNavigationItem):
 
 
 class SettingsNavItem(MDBottomNavigationItem):
-    def sumbit_profile_click(self, _age, _weight, _height):
+    def sumbit_profile_click(self, _age, _weight, _height, _gender):
         try:
             glob.user_profile["age"] = int(_age)
             glob.user_profile["weight"] = float(_weight)
             glob.user_profile["height"] = float(_height)
+            glob.user_profile["male"] = bool(_gender=='m')
             self.errorText.color = [1, 1, 1, 0]
         except (ValueError, TypeError):
             self.errorText.color=[1,0,0,1]

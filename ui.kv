@@ -9,37 +9,35 @@
             MDBoxLayout:
                 orientation: "vertical"
                 MDStackLayout:
-                    Label:
+                    MDLabel:
                         id: calories_show
+                        halign: "center"
                         color: 0,0,0,1
                         font_size:16
                         size_hint: 1,None
                         height: "50dp"
-                    Label:
+                    MDLabel:
                         id: proteins_show
+                        halign: "center"
                         color: 0,0,0,1
                         font_size:16
                         size_hint: 0.33,None
                         height: "50dp"
-                    Label:
+                    MDLabel:
                         id: fats_show
+                        halign: "center"
                         color: 0,0,0,1
                         font_size:16
                         size_hint: 0.33,None
                         height: "50dp"
-                    Label:
+                    MDLabel:
                         id: carbs_show
+                        halign: "center"
                         color: 0,0,0,1
                         font_size:16
                         size_hint: 0.33,None
                         height: "50dp"
         FoodNavigationItem:
-            canvas.before:
-                Color:
-                    rgba: (0,1,0,1)
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
             needed_list: food_list
             helpButton: helpButton
             id: id_food_menu_screen
@@ -48,17 +46,19 @@
             on_pre_enter: self.add_forms()
             MDStackLayout:
                 selected_foods:selected_foods
-                Label:
+                MDLabel:
                     text: "Your menu"
                     font_size: 20
                     color: 0,0,0,1
                     size_hint: 1,0.1
-                    bg_color: app.theme_cls.accent_dark
-                Label:
+                    md_bg_color: app.theme_cls.accent_dark
+                MDLabel:
                     id: selected_foods
+                    halign: "center"
+                    text: "-----Your macros here-----"
                     font_size: 18
                     color: 0,0,0,1
-                    size_hint: 0.7,0.1
+                    size_hint: 1,0.1
                 HelpButton:
                     id: helpButton
                     text: "Help"
@@ -129,6 +129,13 @@
                 orientation: "vertical"
                 MDStackLayout:
                     TextInput:
+                        id: gender_input
+                        size_hint: 1,None
+                        height: "50dp"
+                        hint_text: "gender (m/f)"
+                        multiline: False
+                        selectAll: True
+                    TextInput:
                         id: age_input
                         size_hint: 1,None
                         height: "50dp"
@@ -153,9 +160,9 @@
                         text: "confirm"
                         size_hint: None,None
                         size: "80dp","50dp"
-                        on_release: self.parent.parent.parent.sumbit_profile_click(str(age_input.text),str(weight_input.text),str(height_input.text))
+                        on_release: self.parent.parent.parent.sumbit_profile_click(str(age_input.text),str(weight_input.text),str(height_input.text),str(gender_input.text))
                         md_bg_color: app.theme_cls.primary_dark
-                    Label:
+                    MDLabel:
                         id: ErrorText
                         size_hint: 1,None
                         height: "50dp"
