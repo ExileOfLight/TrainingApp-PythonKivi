@@ -123,6 +123,7 @@ class BoxButton(ToggleButtonBehavior, MDBoxLayout):
 
 class HelpButton (ToggleButton):
     def on_state(self, widget, value):
+        # if self.state == 'down' else app.theme_cls.primary_light
         if value == 'down':
             self.parent.parent.food_help()
             self.call_apriori()
@@ -132,7 +133,7 @@ class HelpButton (ToggleButton):
                 if glob.allfooditems[int(each.id)]['pressed_amount'] == 0:
                     each._md_bg_color = [1, 1, 1, 0.5]
                 else:
-                    each._md_bg_color = [0.5, 0.5, 0.5, 0.8]
+                    each._md_bg_color = [0.7, 0.5, 0.5, 0.8]
 
         MainApp.help_counter += 1
     def call_apriori(self):

@@ -6,16 +6,31 @@
             name:"calories_screen"
             text:"Calories"
             on_pre_enter: root.show_recomend()
-            MDBoxLayout:
+            MDFloatLayout:
                 orientation: "vertical"
+                canvas.before:
+                    Color:
+                        rgba: 0.94,0.94,0.94,1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+
+                    Color:
+                        rgba: app.theme_cls.accent_color
+                    Line:
+                        width: 5
+                        rectangle: self.x, self.y, self.width, self.height
+                        
                 MDStackLayout:
+                    pos_hint: {"x":0,"top":0.7}
+                    spacing: "20dp"
                     MDLabel:
                         id: calories_show
                         halign: "center"
                         color: 0,0,0,1
-                        font_size:16
+                        font_size:24
                         size_hint: 1,None
-                        height: "50dp"
+                        height: "100dp"
                     MDLabel:
                         id: proteins_show
                         halign: "center"
@@ -48,6 +63,8 @@
                 selected_foods:selected_foods
                 MDLabel:
                     text: "Your menu"
+                    padding_x: '15dp'
+                    padding_y: 0
                     font_size: 20
                     color: 0,0,0,1
                     size_hint: 1,0.1
@@ -59,10 +76,16 @@
                     font_size: 18
                     color: 0,0,0,1
                     size_hint: 1,0.1
+                    md_bg_color: 0.94,0.94,0.94,1
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: 3
+                            rectangle: self.x, self.y, self.width, self.height
                 HelpButton:
                     id: helpButton
                     text: "Help"
-                    color: 0,0,0,1
                     size_hint: 1,0.1
                     md_bg_color: app.theme_cls.primary_dark
                 MDScrollView:
