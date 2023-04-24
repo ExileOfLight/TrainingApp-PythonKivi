@@ -1,0 +1,189 @@
+<FitnessApp>:
+    name: "FitnessApp"
+    MDBottomNavigation:
+        MDBottomNavigationItem:
+            id: "calories_screen"
+            name:"calories_screen"
+            text:"Calories"
+            on_pre_enter: root.show_recomend()
+            MDBoxLayout:
+                orientation: "vertical"
+                MDStackLayout:
+                    Label:
+                        id: calories_show
+                        color: 0,0,0,1
+                        font_size:16
+                        size_hint: 1,None
+                        height: "50dp"
+                    Label:
+                        id: proteins_show
+                        color: 0,0,0,1
+                        font_size:16
+                        size_hint: 0.33,None
+                        height: "50dp"
+                    Label:
+                        id: fats_show
+                        color: 0,0,0,1
+                        font_size:16
+                        size_hint: 0.33,None
+                        height: "50dp"
+                    Label:
+                        id: carbs_show
+                        color: 0,0,0,1
+                        font_size:16
+                        size_hint: 0.33,None
+                        height: "50dp"
+        FoodNavigationItem:
+            canvas.before:
+                Color:
+                    rgba: (0,1,0,1)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            needed_list: food_list
+            helpButton: helpButton
+            id: id_food_menu_screen
+            name: "food_menu_screen"
+            text: "food menu"
+            on_pre_enter: self.add_forms()
+            MDStackLayout:
+                selected_foods:selected_foods
+                Label:
+                    text: "Your menu"
+                    font_size: 20
+                    color: 0,0,0,1
+                    size_hint: 1,0.1
+                    bg_color: app.theme_cls.accent_dark
+                Label:
+                    id: selected_foods
+                    font_size: 18
+                    color: 0,0,0,1
+                    size_hint: 0.7,0.1
+                HelpButton:
+                    id: helpButton
+                    text: "Help"
+                    color: 0,0,0,1
+                    size_hint: 1,0.1
+                    md_bg_color: app.theme_cls.primary_dark
+                MDScrollView:
+                    do_scroll_y: True
+                    do_scroll_x: False
+                    MDStackLayout:
+                        id: food_list
+                        size_hint: 1, None
+                        height: self.minimum_height
+
+        MDBottomNavigationItem:
+            id: "add_food_menu_screen"
+            name:"add_food_menu_screen"
+            text:"add food"
+            MDStackLayout:
+                TextInput:
+                    id: name_input
+                    hint_text: "Meal"
+                    size_hint: 1,None
+                    height: "50dp"
+                    multiline: False
+                    selectAll: True
+                TextInput:
+                    id: calories_input
+                    hint_text: "kkal"
+                    size_hint: 1,None
+                    height: "50dp"
+                    multiline: False
+                    selectAll: True
+                TextInput:
+                    id: proteins_input
+                    hint_text: "Proteins"
+                    size_hint: 1,None
+                    height: "50dp"
+                    multiline: False
+                    selectAll: True
+                TextInput:
+                    id: fats_input
+                    size_hint: 1,None
+                    hint_text: "Fats"
+                    height: "50dp"
+                    selectAll: True
+                    multiline: False
+                TextInput:
+                    id: carbs_input
+                    size_hint: 1,None
+                    hint_text:"Carbs"
+                    height: "50dp"
+                    multiline: False
+                    selectAll: True
+                MDRaisedButton:
+                    text: "submit"
+                    size_hint: None,None
+                    size: "50dp","50dp"
+                    on_release: root.sumbit_food_click()
+                    md_bg_color: app.theme_cls.primary_dark
+        SettingsNavItem:
+            id: "settings_screen"
+            name: "settings_screen"
+            text:"Settings"
+            errorText: ErrorText
+            on_leave: ErrorText.color = 1,1,1,0
+            MDBoxLayout:
+                orientation: "vertical"
+                MDStackLayout:
+                    TextInput:
+                        id: age_input
+                        size_hint: 1,None
+                        height: "50dp"
+                        hint_text: "age"
+                        multiline: False
+                        selectAll: True
+                    TextInput:
+                        id: weight_input
+                        size_hint: 1,None
+                        height: "50dp"
+                        hint_text: "weight"
+                        multiline: False
+                        selectAll: True
+                    TextInput:
+                        id: height_input
+                        size_hint: 1,None
+                        height: "50dp"
+                        hint_text: "height(cm)"
+                        selectAll: True
+                        multiline: False
+                    MDRaisedButton:
+                        text: "confirm"
+                        size_hint: None,None
+                        size: "80dp","50dp"
+                        on_release: self.parent.parent.parent.sumbit_profile_click(str(age_input.text),str(weight_input.text),str(height_input.text))
+                        md_bg_color: app.theme_cls.primary_dark
+                    Label:
+                        id: ErrorText
+                        size_hint: 1,None
+                        height: "50dp"
+                        font_size: 20
+                        text: "Invalid input"
+                        color: 1,1,1,0
+                MDRaisedButton:
+                    size_hint: 1,0.17
+                    text: "End day"
+                    font_size: 20
+                    size_hint: 1,0.17
+                    on_release: app.end_day()
+                    md_bg_color: app.theme_cls.accent_light
+
+<AmountAskPopup>
+    amountText: amountText
+    auto_dismiss: False
+    title: "Enter the amount"
+    size_hint: 0.8, 0.3
+    MDBoxLayout:
+        orientation: "vertical"
+        TextInput:
+            id: amountText
+            size_hint: 1, 0.5
+        MDRaisedButton:
+            text: "Confirm"
+            size_hint: 0.5,0.5
+            pos_hint: {"x":0.5,"y":1}
+            font_size: 18
+            on_release: root.send_popup_to_calcs(root.amountText.text), root.dismiss()
+            md_bg_color: app.theme_cls.primary_dark
