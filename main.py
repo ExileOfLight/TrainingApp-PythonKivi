@@ -15,8 +15,7 @@ from kivy.clock import Clock
 from kivy.config import Config
 
 import pickle
-
-import magic
+from magic import apriori
 import globals as glob
 
 
@@ -147,10 +146,10 @@ class HelpButton(ToggleButton):
         MainApp.help_counter += 1
 
     def call_apriori(self):
-        print(glob.food_choices)
-        result = magic.apriori(glob.food_choices, 0.01, 0.01, 0.01, 10)
-        for each in result:
-            print(''.join(each[0]) + ',' + each[2] + ',' + str(each[3]) + ',' + str(each[4]))
+        # print(glob.food_choices)
+        result = apriori(glob.food_choices, 0.01, 0.01, 0.01, len(self.parent.parent.needed_list.children))
+        # for each in result:
+            # print(''.join(each[0]) + ',' + each[2] + ',' + str(each[3]) + ',' + str(each[4]))
         current_pressed = set()
         for each in glob.allfooditems:
             if each['pressed_amount'] > 0:
