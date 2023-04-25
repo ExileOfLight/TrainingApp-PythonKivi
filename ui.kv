@@ -179,19 +179,35 @@
                         hint_text: "height(cm)"
                         selectAll: True
                         multiline: False
+                MDStackLayout:
                     MDRaisedButton:
-                        text: "confirm"
-                        size_hint: None,None
-                        size: "80dp","50dp"
-                        on_release: self.parent.parent.parent.sumbit_profile_click(str(age_input.text),str(weight_input.text),str(height_input.text),str(gender_input.text))
-                        md_bg_color: app.theme_cls.primary_dark
-                    MDLabel:
-                        id: ErrorText
-                        size_hint: 1,None
+                        id: diet_down
+                        size_hint: 0.33,None
                         height: "50dp"
-                        font_size: 20
-                        text: "Invalid input"
-                        color: 1,1,1,0
+                        text: "Diet Down"
+                    MDRaisedButton:
+                        id: diet_normal
+                        size_hint: 0.33,None
+                        height: "50dp"
+                        text: "Diet Normal"
+                    MDRaisedButton:
+                        id: diet_up
+                        size_hint: 0.33,None
+                        height: "50dp"
+                        text: "Diet Up"
+                MDRaisedButton:
+                    text: "confirm"
+                    size_hint: None,None
+                    size: "80dp","50dp"
+                    on_release: self.parent.parent.parent.sumbit_profile_click(str(age_input.text),str(weight_input.text),str(height_input.text),str(gender_input.text))
+                    md_bg_color: app.theme_cls.primary_dark
+                MDLabel:
+                    id: ErrorText
+                    size_hint: 1,None
+                    height: "50dp"
+                    font_size: 20
+                    text: "Invalid input"
+                    color: 1,1,1,0
                 MDRaisedButton:
                     size_hint: 1,0.17
                     text: "End day"

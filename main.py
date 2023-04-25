@@ -52,13 +52,14 @@ class Fitnessapp(Screen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        data_saved = [{}, [], {}, []]
+        data_saved = [{}, [], {}, [], []]
         try:
             load_data(data_saved)
             glob.user_profile = data_saved[0]
             glob.allfooditems = data_saved[1]
             # glob.current_food_sum = data_saved[2]
             glob.food_choices = data_saved[3]
+            glob.diet_plan = data_saved[4]
         except EOFError:
             print('Loading defaults')
         self.show_recomend()
@@ -233,15 +234,18 @@ class FoodNavigationItem(MDBottomNavigationItem):
 
 
 class SettingsNavItem(MDBottomNavigationItem):
-    def sumbit_profile_click(self, _age, _weight, _height, _gender):
+    def sumbit_profile_click(self, _age, _weight, _height, _gender, _diet):
         try:
             glob.user_profile["age"] = int(_age)
             glob.user_profile["weight"] = float(_weight)
             glob.user_profile["height"] = float(_height)
             glob.user_profile["male"] = bool(_gender=='m')
             self.errorText.color = [1, 1, 1, 0]
+
         except (ValueError, TypeError):
             self.errorText.color=[1,0,0,1]
+    def 
+
 
 class LoadingScreen(Screen):
     Builder.load_file("loading_screen.kv")
@@ -259,7 +263,7 @@ class MainApp(MDApp):
         Clock.schedule_once(self.change_screen_to_main, 2)
 
     def on_stop(self):
-        save_data([glob.user_profile, glob.allfooditems, glob.current_food_sum, glob.food_choices])
+        save_data([glob.user_profile, glob.allfooditems, glob.current_food_sum, glob.food_choices, glob.diet_plan])
     def change_screen_to_main(self, dt):
         sm.current = 'FitnessApp'
         Window.size = (360, 640)
@@ -286,6 +290,10 @@ class MainApp(MDApp):
 
 
 def calculate_def_macros(profile):
+    protein_perct = glob.diet_plan["protein"]
+    fat_perct = glob.diet_plan["fat"]
+    carb_perct = glob.diet_plan["carb"]
+    deficit = glob.diet_plan["deficit"]
     stress_factor = 1
     if profile["male"]:
         def_calories = 5 + (10 * float(profile["weight"])) + (6.25 * float(profile["height"])) - (
@@ -295,10 +303,10 @@ def calculate_def_macros(profile):
         def_calories = -161 + (10 * float(profile["weight"])) + (6.25 * float(profile["height"])) - (
                 5 * float(profile["age"]))
         def_calories *= stress_factor
-    def_calories = round(def_calories)
-    def_proteins = round(def_calories * 0.25 / 4)
-    def_fats = round(def_calories * 0.30 / 8)
-    def_carbs = round(def_calories * 0.45 / 4)
+    def_calories = round(def_calories) - deficit
+    def_proteins = round(def_calories * protein_perct / 4)
+    def_fats = round(def_calories * fat_perct / 8)
+    def_carbs = round(def_calories * carb_perct / 4)
     return [def_calories, def_proteins, def_fats, def_carbs]
 
 

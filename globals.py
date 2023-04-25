@@ -15,3 +15,5 @@ allfooditems = [{"name": "rice(100g)", "calories": "129",
 current_food_sum = {"calories": 0, "proteins": 0, "fats": 0, "carbs": 0}
 needed_macros = []
 food_choices = []
+diet_plan = {"protein": 0.25, "fat": 0.3,
+                  "carb": 0.45, "deficit": 0}
