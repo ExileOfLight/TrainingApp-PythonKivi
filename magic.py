@@ -2,7 +2,6 @@ import math
 from copy import deepcopy
 from prettytable import PrettyTable
 from itertools import combinations
-import traceback
 
 
 def get_sup(n, current, items, appearance_count, buys, singles, start_pos):

@@ -1,4 +1,3 @@
-import weakref
 from kivy.properties import StringProperty, ObjectProperty
 from kivy.uix.behaviors import ButtonBehavior, ToggleButtonBehavior
 from kivy.lang import Builder
