@@ -305,11 +305,10 @@ def calculate_def_macros(profile, diet_plan):
     if profile["male"]:
         def_calories = 5 + (10 * float(profile["weight"])) + (6.25 * float(profile["height"])) - (
                 5 * float(profile["age"]))
-        def_calories *= stress_factor
     else:
         def_calories = -161 + (10 * float(profile["weight"])) + (6.25 * float(profile["height"])) - (
                 5 * float(profile["age"]))
-        def_calories *= stress_factor
+    def_calories *= stress_factor
     def_calories = round(def_calories) - deficit
     def_proteins = round(def_calories * protein_perct / 4)
     def_fats = round(def_calories * fat_perct / 8)
