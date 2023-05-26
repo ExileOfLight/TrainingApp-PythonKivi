@@ -5,7 +5,7 @@
             id: "calories_screen"
             name:"calories_screen"
             text:"Calories"
-            on_pre_enter: root.show_recomend()
+            on_pre_enter: root.show_recommend()
             MDFloatLayout:
                 orientation: "vertical"
                 canvas.before:
@@ -57,6 +57,7 @@
             helpButton: helpButton
             id: id_food_menu_screen
             name: "food_menu_screen"
+            selected_foods:selected_foods
             text: "food menu"
             on_pre_enter: self.add_forms()
             MDStackLayout:
@@ -69,7 +70,7 @@
                     color: 0,0,0,1
                     size_hint: 1,0.1
                     md_bg_color: app.theme_cls.accent_dark
-                MDLabel:
+                SelectedFoods:
                     id: selected_foods
                     halign: "center"
                     text: "-----Your macros here-----"
@@ -144,12 +145,14 @@
                     md_bg_color: app.theme_cls.primary_dark
         SettingsNavItem:
             id: "settings_screen"
+            current_age: age_input
+            current_weight: weight_input
+            current_height: height_input
+            current_gender: gender_input
             name: "settings_screen"
             text:"Settings"
-            errorText: ErrorText
-            on_leave: ErrorText.color = 1,1,1,0
             MDBoxLayout:
-                orientation: "vertical"
+                orientation: 'vertical'
                 MDStackLayout:
                     TextInput:
                         id: gender_input
@@ -179,35 +182,37 @@
                         hint_text: "height(cm)"
                         selectAll: True
                         multiline: False
-                MDStackLayout:
+                ButtonsDeficitChoice:
+                    id: deficit_choice
+                    orientation: "lr-tb"
+                    spacing: dp(10)
                     MDRaisedButton:
                         id: diet_down
                         size_hint: 0.33,None
                         height: "50dp"
-                        text: "Diet Down"
+                        text: "Deficit"
+                        md_bg_color: app.theme_cls.primary_dark
+                        on_release: self.parent.on_button_pressed(self)
                     MDRaisedButton:
                         id: diet_normal
                         size_hint: 0.33,None
                         height: "50dp"
-                        text: "Diet Normal"
+                        text: "Upkeep"
+                        md_bg_color: app.theme_cls.primary_dark
+                        on_release: self.parent.on_button_pressed(self)
                     MDRaisedButton:
                         id: diet_up
                         size_hint: 0.33,None
                         height: "50dp"
-                        text: "Diet Up"
+                        text: "Bulk"
+                        md_bg_color: app.theme_cls.primary_dark
+                        on_release: self.parent.on_button_pressed(self)
                 MDRaisedButton:
                     text: "confirm"
                     size_hint: None,None
                     size: "80dp","50dp"
-                    on_release: self.parent.parent.parent.sumbit_profile_click(str(age_input.text),str(weight_input.text),str(height_input.text),str(gender_input.text))
+                    on_release: self.parent.parent.submit_profile_click(str(age_input.text),str(weight_input.text),str(height_input.text),str(gender_input.text), deficit_choice)
                     md_bg_color: app.theme_cls.primary_dark
-                MDLabel:
-                    id: ErrorText
-                    size_hint: 1,None
-                    height: "50dp"
-                    font_size: 20
-                    text: "Invalid input"
-                    color: 1,1,1,0
                 MDRaisedButton:
                     size_hint: 1,0.17
                     text: "End day"
@@ -231,5 +236,5 @@
             size_hint: 0.5,0.5
             pos_hint: {"x":0.5,"y":1}
             font_size: 18
-            on_release: root.send_popup_to_calcs(root.amountText.text), root.dismiss()
+            on_release: root.send_popup_to_calcs(root.amountText.text)
             md_bg_color: app.theme_cls.primary_dark
