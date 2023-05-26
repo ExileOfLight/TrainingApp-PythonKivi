@@ -4,7 +4,7 @@
         MDBottomNavigationItem:
             id: "calories_screen"
             name:"calories_screen"
-            text:"Calories"
+            text:"Калории"
             on_pre_enter: root.show_recommend()
             MDFloatLayout:
                 orientation: "vertical"
@@ -58,12 +58,12 @@
             id: id_food_menu_screen
             name: "food_menu_screen"
             selected_foods:selected_foods
-            text: "food menu"
+            text: "Меню"
             on_pre_enter: self.add_forms()
             MDStackLayout:
                 selected_foods:selected_foods
                 MDLabel:
-                    text: "Your menu"
+                    text: "Ваше меню"
                     padding_x: '15dp'
                     padding_y: 0
                     font_size: 20
@@ -73,7 +73,7 @@
                 SelectedFoods:
                     id: selected_foods
                     halign: "center"
-                    text: "-----Your macros here-----"
+                    text: "-----Текущие калории здесь-----"
                     font_size: 18
                     color: 0,0,0,1
                     size_hint: 1,0.1
@@ -86,7 +86,7 @@
                             rectangle: self.x, self.y, self.width, self.height
                 HelpButton:
                     id: helpButton
-                    text: "Help"
+                    text: "Помощь"
                     size_hint: 1,0.1
                     md_bg_color: app.theme_cls.primary_dark
                 MDScrollView:
@@ -100,25 +100,25 @@
         MDBottomNavigationItem:
             id: "add_food_menu_screen"
             name:"add_food_menu_screen"
-            text:"add food"
+            text:"Нов блюдо"
             MDStackLayout:
                 TextInput:
                     id: name_input
-                    hint_text: "Meal"
+                    hint_text: "Название"
                     size_hint: 1,None
                     height: "50dp"
                     multiline: False
                     selectAll: True
                 TextInput:
                     id: calories_input
-                    hint_text: "kkal"
+                    hint_text: "Ккал"
                     size_hint: 1,None
                     height: "50dp"
                     multiline: False
                     selectAll: True
                 TextInput:
                     id: proteins_input
-                    hint_text: "Proteins"
+                    hint_text: "Белки"
                     size_hint: 1,None
                     height: "50dp"
                     multiline: False
@@ -126,22 +126,22 @@
                 TextInput:
                     id: fats_input
                     size_hint: 1,None
-                    hint_text: "Fats"
+                    hint_text: "Жиры"
                     height: "50dp"
                     selectAll: True
                     multiline: False
                 TextInput:
                     id: carbs_input
                     size_hint: 1,None
-                    hint_text:"Carbs"
+                    hint_text:"Углеводы"
                     height: "50dp"
                     multiline: False
                     selectAll: True
                 MDRaisedButton:
-                    text: "submit"
+                    text: "Подтвердить"
                     size_hint: None,None
                     size: "50dp","50dp"
-                    on_release: root.sumbit_food_click()
+                    on_release: root.submit_food_click()
                     md_bg_color: app.theme_cls.primary_dark
         SettingsNavItem:
             id: "settings_screen"
@@ -150,74 +150,79 @@
             current_height: height_input
             current_gender: gender_input
             name: "settings_screen"
-            text:"Settings"
+            text:"Настройки"
             MDBoxLayout:
                 orientation: 'vertical'
                 MDStackLayout:
+                    size_hint: 1, 0.4
                     TextInput:
                         id: gender_input
                         size_hint: 1,None
                         height: "50dp"
-                        hint_text: "gender (m/f)"
+                        hint_text: "Пол (м/ж)"
                         multiline: False
                         selectAll: True
                     TextInput:
                         id: age_input
                         size_hint: 1,None
                         height: "50dp"
-                        hint_text: "age"
+                        hint_text: "Возраст"
                         multiline: False
                         selectAll: True
                     TextInput:
                         id: weight_input
                         size_hint: 1,None
                         height: "50dp"
-                        hint_text: "weight"
+                        hint_text: "Вес"
                         multiline: False
                         selectAll: True
                     TextInput:
                         id: height_input
                         size_hint: 1,None
                         height: "50dp"
-                        hint_text: "height(cm)"
+                        hint_text: "Рост(в см)"
                         selectAll: True
                         multiline: False
                 ButtonsDeficitChoice:
                     id: deficit_choice
                     orientation: "lr-tb"
                     spacing: dp(10)
+                    size_hint: 1, 0.2
                     MDRaisedButton:
                         id: diet_down
                         size_hint: 0.33,None
                         height: "50dp"
-                        text: "Deficit"
+                        text: "Дефицит"
                         md_bg_color: app.theme_cls.primary_dark
                         on_release: self.parent.on_button_pressed(self)
                     MDRaisedButton:
                         id: diet_normal
                         size_hint: 0.33,None
                         height: "50dp"
-                        text: "Upkeep"
+                        text: "Поддержка"
                         md_bg_color: app.theme_cls.primary_dark
                         on_release: self.parent.on_button_pressed(self)
                     MDRaisedButton:
                         id: diet_up
                         size_hint: 0.33,None
                         height: "50dp"
-                        text: "Bulk"
+                        text: "Набор"
                         md_bg_color: app.theme_cls.primary_dark
                         on_release: self.parent.on_button_pressed(self)
+                MDBoxLayout:
+                    size_hint: 1, 0.3
+                    MDRaisedButton:
+                        pos_hint: {'x': 0.5,'y': 0.9}
+                        text: "Подтвердить"
+                        height: "20dp"
+                        on_release: self.parent.parent.parent.submit_profile_click(str(age_input.text),str(weight_input.text),str(height_input.text),str(gender_input.text), deficit_choice)
+                        md_bg_color: app.theme_cls.primary_dark
                 MDRaisedButton:
-                    text: "confirm"
-                    size_hint: None,None
-                    size: "80dp","50dp"
-                    on_release: self.parent.parent.submit_profile_click(str(age_input.text),str(weight_input.text),str(height_input.text),str(gender_input.text), deficit_choice)
-                    md_bg_color: app.theme_cls.primary_dark
-                MDRaisedButton:
-                    size_hint: 1,0.17
-                    text: "End day"
+                    height: "20dp"
+                    margin: "30dp"
+                    text: "Закончить день"
                     font_size: 20
-                    size_hint: 1,0.17
+                    size_hint: 1,None
                     on_release: app.end_day()
                     md_bg_color: app.theme_cls.accent_light
 

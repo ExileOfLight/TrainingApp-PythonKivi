@@ -68,7 +68,7 @@ class Fitnessapp(Screen):
     def on_pre_enter(self):
         Window.size = (720, 1280)
 
-    def sumbit_food_click(self):
+    def submit_food_click(self):
         allFood = glob.allfooditems
         newDict = {"name": self.ids.name_input.text, "calories": self.ids.calories_input.text,
                    "proteins": self.ids.proteins_input.text, "fats": self.ids.fats_input.text,
@@ -76,16 +76,16 @@ class Fitnessapp(Screen):
         if newDict not in allFood:
             allFood.append(newDict)
         glob.allfooditems = allFood
+        self.add_forms()
 
     def show_recommend(self):
         glob.needed_macros = calculate_def_macros(glob.user_profile, glob.diet_plan)
-        self.ids.calories_show.text = "kkal\n" + str(glob.current_food_sum["calories"]) + "/" + str(
+        self.ids.calories_show.text = "Ккал\n" + str(glob.current_food_sum["calories"]) + "/" + str(
             glob.needed_macros[0])
-        self.ids.proteins_show.text = "proteins\n" + str(glob.current_food_sum["proteins"]) + "/" + str(
+        self.ids.proteins_show.text = "Белки\n" + str(glob.current_food_sum["proteins"]) + "/" + str(
             glob.needed_macros[1])
-        self.ids.fats_show.text = "fats\n" + str(glob.current_food_sum["fats"]) + "/" + str(glob.needed_macros[2])
-        self.ids.carbs_show.text = "carbs\n" + str(glob.current_food_sum["carbs"]) + "/" + str(glob.needed_macros[3])
-        # MainApp.stop(MainApp())
+        self.ids.fats_show.text = "Жиры\n" + str(glob.current_food_sum["fats"]) + "/" + str(glob.needed_macros[2])
+        self.ids.carbs_show.text = "Углеводы\n" + str(glob.current_food_sum["carbs"]) + "/" + str(glob.needed_macros[3])
 
 class FoodNavigationItem(MDBottomNavigationItem):
     def __init__(self, **kwargs):
@@ -95,7 +95,8 @@ class FoodNavigationItem(MDBottomNavigationItem):
     def food_help(self):
         allFood = glob.allfooditems
         for each in self.needed_list.children[2:]:
-            if float(allFood[int(each.id)]["calories"]) * 3 < glob.needed_macros[0] and \
+            if float(allFood[int(each.id)]
+                     ["calories"]) * 3 < glob.needed_macros[0] and \
                     float(allFood[int(each.id)]["proteins"]) * 3 < glob.needed_macros[1] and \
                     float(allFood[int(each.id)]["fats"]) * 3 < glob.needed_macros[2] and \
                     float(allFood[int(each.id)]["carbs"]) * 3 < glob.needed_macros[3] and \
@@ -132,10 +133,10 @@ class FoodNavigationItem(MDBottomNavigationItem):
             bt0 = Label(text="Name\n" + values[0], font_size=16, size_hint=[0.4, 1], color=[0, 0, 0, 1],
                         valign="middle")
             bt0.bind(size=bt0.setter('text_size'))
-            bt1 = Label(text="kkal\n" + values[1], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
-            bt2 = Label(text="proteins\n" + values[2], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
-            bt3 = Label(text="fats\n" + values[3], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
-            bt4 = Label(text="carbs\n" + values[4], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
+            bt1 = Label(text="Ккал\n" + values[1], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
+            bt2 = Label(text="Белки\n" + values[2], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
+            bt3 = Label(text="Жиры\n" + values[3], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
+            bt4 = Label(text="Углвды\n" + values[4], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
             row.add_widget(bt0)
             row.add_widget(bt1)
             row.add_widget(bt2)
@@ -157,8 +158,8 @@ class SelectedFoods(MDLabel):
         current_proteins = glob.current_food_sum["proteins"]
         current_fats = glob.current_food_sum["fats"]
         current_carbs = glob.current_food_sum["carbs"]
-        self.text = "kkal: " + str(current_calories) + "\nproteins: " + str(
-            current_proteins) + "  fats: " + str(current_fats) + "  carbs: " + str(current_carbs)
+        self.text = "ккал: " + str(current_calories) + "\nбелки: " + str(
+            current_proteins) + "  жиры: " + str(current_fats) + "  углеводы: " + str(current_carbs)
 class ToggleFoodButton(ToggleButtonBehavior, MDBoxLayout):
     def __init__(self, **kwargs):
         super(ToggleFoodButton, self).__init__(**kwargs)
@@ -248,7 +249,7 @@ class AmountAskPopup(Popup):
             self.widget.parent.parent.parent.parent.selected_foods.show_current()
             self.dismiss()
         except ValueError:
-            toast("Enter a valid number (rational)")
+            toast("Введите допустимое число")
 
 class SettingsNavItem(MDBottomNavigationItem):
     def on_enter(self, *args):
@@ -273,7 +274,7 @@ class SettingsNavItem(MDBottomNavigationItem):
             #self.parent.parent.parent.show_recommend()
 
         except (ValueError, TypeError):
-            toast("Please fill out all the fields")
+            toast("Пожалуйста, заполните все поля")
 class ButtonsDeficitChoice (MDStackLayout):
     def on_button_pressed(self, button):
         for child in self.children:
@@ -335,7 +336,7 @@ def calculate_def_macros(profile, diet_plan):
     carb_perct = diet_plan["carb"]
     deficit = diet_plan["deficit"]
     stress_factor = 1
-    if profile["gender"]=="m":
+    if profile["gender"]=="m" or profile["gender"]=="м":
         def_calories = 5 + (10 * float(profile["weight"])) + (6.25 * float(profile["height"])) - (
                 5 * float(profile["age"]))
     else:
