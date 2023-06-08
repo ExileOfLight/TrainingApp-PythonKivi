@@ -67,15 +67,47 @@ class Fitnessapp(Screen):
 
     def on_pre_enter(self):
         Window.size = (720, 1280)
-
-    def sumbit_food_click(self):
+        self.add_forms()
+    def add_forms(self):
         allFood = glob.allfooditems
-        newDict = {"name": self.ids.name_input.text, "calories": self.ids.calories_input.text,
-                   "proteins": self.ids.proteins_input.text, "fats": self.ids.fats_input.text,
-                   "carbs": self.ids.carbs_input.text, "pressed_amount": 0}
-        if newDict not in allFood:
-            allFood.append(newDict)
-        glob.allfooditems = allFood
+
+        self.foodMenuScreen.needed_list.bind(minimum_height=self.setter("height"))
+        for meal in allFood[MainApp.draw_counter:]:
+            row = ToggleFoodButton(orientation="horizontal", padding=[10, 0, 10, 0], size_hint=[1, None],
+                                   _md_bg_color=[1, 1, 1, .5],
+                                   id=str(allFood.index(meal)))
+
+            values = list(meal.values())
+            bt0 = Label(text="Name\n" + str(values[0]), font_size=16, size_hint=[0.4, 1], color=[0, 0, 0, 1],
+                        valign="middle")
+            bt0.bind(size=bt0.setter('text_size'))
+            bt1 = Label(text="Kkal\n" + str(values[1]), font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
+            bt2 = Label(text="Proteins\n" + str(values[2]), font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
+            bt3 = Label(text="Fats\n" + str(values[3]), font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
+            bt4 = Label(text="Carbs\n" + str(values[4]), font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
+            row.add_widget(bt0)
+            row.add_widget(bt1)
+            row.add_widget(bt2)
+            row.add_widget(bt3)
+            row.add_widget(bt4)
+            self.foodMenuScreen.needed_list.add_widget(row)
+            if meal["pressed_amount"] > 0:
+                row.state = 'down'
+            else:
+                row.state = 'normal'
+            MainApp.draw_counter += 1
+    def submit_food_click(self):
+        allFood = glob.allfooditems
+        try:
+            newDict = {"name": str(self.ids.name_input.text), "calories": int(self.ids.calories_input.text),
+                       "proteins": int(self.ids.proteins_input.text), "fats": int(self.ids.fats_input.text),
+                       "carbs": int(self.ids.carbs_input.text), "pressed_amount": 0}
+            if newDict not in allFood:
+                allFood.append(newDict)
+            glob.allfooditems = allFood
+            self.add_forms()
+        except (ValueError, TypeError):
+            toast("Please, fiil out all the fields")
 
     def show_recommend(self):
         glob.needed_macros = calculate_def_macros(glob.user_profile, glob.diet_plan)
@@ -120,38 +152,6 @@ class FoodNavigationItem(MDBottomNavigationItem):
             else:
                 each._md_bg_color = [1, 0, 0, 0.7]
 
-    def add_forms(self):
-        allFood = glob.allfooditems
-        self.needed_list.bind(minimum_height=self.setter("height"))
-        for meal in allFood[MainApp.counter:]:
-            row = ToggleFoodButton(orientation="horizontal", padding=[10, 0, 10, 0], size_hint=[1, None],
-                            _md_bg_color=[1, 1, 1, .5],
-                            id=str(allFood.index(meal)))
-
-            values = list(meal.values())
-            bt0 = Label(text="Name\n" + values[0], font_size=16, size_hint=[0.4, 1], color=[0, 0, 0, 1],
-                        valign="middle")
-            bt0.bind(size=bt0.setter('text_size'))
-            bt1 = Label(text="kkal\n" + values[1], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
-            bt2 = Label(text="proteins\n" + values[2], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
-            bt3 = Label(text="fats\n" + values[3], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
-            bt4 = Label(text="carbs\n" + values[4], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
-            row.add_widget(bt0)
-            row.add_widget(bt1)
-            row.add_widget(bt2)
-            row.add_widget(bt3)
-            row.add_widget(bt4)
-            self.needed_list.add_widget(row)
-            if meal["pressed_amount"] > 0:
-                row.state = 'down'
-            else:
-                row.state = 'normal'
-            MainApp.counter += 1
-        if len(self.needed_list.children)==len(allFood):
-            for _ in range(2):
-                row = ToggleFoodButton(orientation="horizontal", padding=[10, 0, 10, 0], size_hint=[1, None],
-                                _md_bg_color=[1, 1, 1, .5])
-                self.needed_list.add_widget(row)
 class SelectedFoods(MDLabel):
     def show_current(self):
         current_calories = glob.current_food_sum["calories"]
@@ -253,16 +253,16 @@ class AmountAskPopup(Popup):
 
 class SettingsNavItem(MDBottomNavigationItem):
     def on_enter(self, *args):
-        self.current_age.text = glob.user_profile["age"]
-        self.current_height.text = glob.user_profile["height"]
-        self.current_weight.text = glob.user_profile["weight"]
-        self.current_gender.text = glob.user_profile["gender"]
+        self.current_age.text = str(glob.user_profile["age"])
+        self.current_height.text = str(glob.user_profile["height"])
+        self.current_weight.text = str(glob.user_profile["weight"])
+        self.current_gender.text = str(glob.user_profile["gender"])
 
     def submit_profile_click(self, _age, _weight, _height, _gender, _diet):
         try:
-            glob.user_profile["age"] = _age
-            glob.user_profile["weight"] = _weight
-            glob.user_profile["height"] = _height
+            glob.user_profile["age"] = int(_age)
+            glob.user_profile["weight"] = int(_weight)
+            glob.user_profile["height"] = int(_height)
             glob.user_profile["gender"] = _gender
             for child in _diet.children:
                 if child.state == 'down':
@@ -270,6 +270,8 @@ class SettingsNavItem(MDBottomNavigationItem):
                         glob.diet_plan["deficit"] = -300
                     elif child.text == "Deficit":
                         glob.diet_plan["deficit"] = 300
+                    else:
+                        glob.diet_plan["deficit"] = 0
 
             #self.parent.parent.parent.show_recommend()
 
@@ -288,7 +290,7 @@ class LoadingScreen(Screen):
     Builder.load_file("loading_screen.kv")
 
 class MainApp(MDApp):
-    counter = 0
+    draw_counter = 0
     help_counter = 0
     Config.set('graphics', 'width', '360')
     Config.set('graphics', 'height', '640')

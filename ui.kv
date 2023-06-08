@@ -1,5 +1,6 @@
 <FitnessApp>:
     name: "FitnessApp"
+    foodMenuScreen : id_food_menu_screen
     MDBottomNavigation:
         MDBottomNavigationItem:
             id: "calories_screen"
@@ -61,7 +62,6 @@
             icon: "food-outline"
             selected_foods:selected_foods
             text: "food menu"
-            on_pre_enter: self.add_forms()
             MDStackLayout:
                 selected_foods:selected_foods
                 MDLabel:
@@ -97,7 +97,7 @@
                     MDStackLayout:
                         id: food_list
                         size_hint: 1, None
-                        height: self.minimum_height
+                        height: self.minimum_height+300
 
         MDBottomNavigationItem:
             id: "add_food_menu_screen"
