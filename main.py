@@ -66,13 +66,14 @@ class Fitnessapp(Screen):
         self.show_recommend()
 
     def on_pre_enter(self):
-        Window.size = (720, 1280)
+        Window.size = (360, 640)
         self.add_forms()
     def add_forms(self):
         allFood = glob.allfooditems
+        self.foodMenuScreen.needed_list.clear_widgets()
 
         self.foodMenuScreen.needed_list.bind(minimum_height=self.setter("height"))
-        for meal in allFood[MainApp.draw_counter:]:
+        for meal in allFood:
             row = ToggleFoodButton(orientation="horizontal", padding=[10, 0, 10, 0], size_hint=[1, None],
                                    _md_bg_color=[1, 1, 1, .5],
                                    id=str(allFood.index(meal)))
@@ -95,7 +96,6 @@ class Fitnessapp(Screen):
                 row.state = 'down'
             else:
                 row.state = 'normal'
-            MainApp.draw_counter += 1
     def submit_food_click(self):
         allFood = glob.allfooditems
         try:
@@ -125,7 +125,7 @@ class FoodNavigationItem(MDBottomNavigationItem):
 
     def food_help(self):
         allFood = glob.allfooditems
-        for each in self.needed_list.children[2:]:
+        for each in self.needed_list.children:
             if float(allFood[int(each.id)]
                      ["calories"]) * 3 < glob.needed_macros[0] and \
                     float(allFood[int(each.id)]["proteins"]) * 3 < glob.needed_macros[1] and \
@@ -134,7 +134,7 @@ class FoodNavigationItem(MDBottomNavigationItem):
                     float(allFood[int(each.id)]["carbs"]) * 4 / float(
             allFood[int(each.id)]["calories"]) < 0.9:
                 if allFood[int(each.id)]["pressed_amount"] > 0:
-                    each._md_bg_color = [0, 0.7, 0, 0.7]
+                    each._md_bg_color = [0.7, 0.5, 0.5, 0.8]
                 else:
                     each._md_bg_color = [0, 1, 0, 0.5]
             elif float(allFood[int(each.id)]["calories"]) * 1 < glob.needed_macros[0] - float(
@@ -146,11 +146,14 @@ class FoodNavigationItem(MDBottomNavigationItem):
                     float(allFood[int(each.id)]["carbs"]) * 1 < glob.needed_macros[3] - float(
                 glob.current_food_sum["carbs"]):
                 if allFood[int(each.id)]["pressed_amount"] > 0:
-                    each._md_bg_color = [0.7, 0.7, 0, 0.7]
+                    each._md_bg_color = [0.7, 0.5, 0.5, 0.8]
                 else:
                     each._md_bg_color = [1, 1, 0, 0.7]
             else:
-                each._md_bg_color = [1, 0, 0, 0.7]
+                if allFood[int(each.id)]["pressed_amount"] > 0:
+                    each._md_bg_color = [0.7, 0.5, 0.5, 0.8]
+                else:
+                    each._md_bg_color = [1, 0, 0, 0.7]
 
 class SelectedFoods(MDLabel):
     def show_current(self):
@@ -212,8 +215,8 @@ class HelpButton(ToggleButton):
             self.parent.parent.food_help()
             self.call_apriori()
         else:
-            self.text = 'Help'
-            for each in self.parent.parent.needed_list.children[2:]:
+            self.text = "Помощь"
+            for each in self.parent.parent.needed_list.children:
                 if allFood[int(each.id)]['pressed_amount'] == 0:
                     each._md_bg_color = [1, 1, 1, 0.5]
                 else:
@@ -225,16 +228,23 @@ class HelpButton(ToggleButton):
         allFood = glob.allfooditems
         result = apriori(glob.food_choices, 0.01, 0.01, 0.01, len(self.parent.parent.needed_list.children))
         current_pressed = set()
+        competition = []
         for each in allFood:
             if each['pressed_amount'] > 0:
                 current_pressed.add(each['name'])
-        for rules_data in result:
+        for rules_data in result: # rules_data - [набор, поддержка набора, условие правила, достоверность правила, лифт правила]
             condition = set(rules_data[2].split(' '))
             full_set = set(rules_data[0].split(' '))
             if current_pressed == condition:
-                if rules_data[4] > 1 and len(full_set) - len(condition) == 1:
-                    diff = full_set.difference(condition)
-                    self.text = str(diff.pop())
+                if rules_data[4] >= 1 and len(full_set) - len(condition) == 1:
+                    competition.append(rules_data)
+        if len(competition)>0:
+            competitionSorted = sorted(competition, key=lambda x: x[3]+x[4])
+            best_rule = competitionSorted.pop()
+            condition = set(best_rule[2].split(' '))
+            full_set = set(best_rule[0].split(' '))
+            diff = full_set.difference(condition)
+            self.text = str(diff.pop())
 
 class AmountAskPopup(Popup):
     widget = ObjectProperty(None)
@@ -274,7 +284,7 @@ class SettingsNavItem(MDBottomNavigationItem):
                         glob.diet_plan["deficit"] = 0
 
             #self.parent.parent.parent.show_recommend()
-
+            save_data([glob.user_profile, glob.allfooditems, glob.current_food_sum, glob.food_choices, glob.diet_plan])
         except (ValueError, TypeError):
             toast("Пожалуйста, заполните все поля")
 class ButtonsDeficitChoice (MDStackLayout):
@@ -290,7 +300,6 @@ class LoadingScreen(Screen):
     Builder.load_file("loading_screen.kv")
 
 class MainApp(MDApp):
-    draw_counter = 0
     help_counter = 0
     Config.set('graphics', 'width', '360')
     Config.set('graphics', 'height', '640')
@@ -298,7 +307,6 @@ class MainApp(MDApp):
     sm = ScreenManager()
 
     def on_start(self):
-        Window.size = (360, 640)
         Clock.schedule_once(self.change_screen_to_main, 2)
 
     def on_stop(self):
@@ -306,20 +314,25 @@ class MainApp(MDApp):
 
     def change_screen_to_main(self, dt):
         sm.current = 'FitnessApp'
-        Window.size = (360, 640)
 
     def change_screen_to_loading(self, dt):
         sm.current = 'LoadingScreen'
 
     def end_day(self):
+
         allFood = glob.allfooditems
         glob.food_choices.append([])
         for meal in allFood:
             if meal["pressed_amount"] > 0:
                 glob.food_choices[-1].append(meal['name'])
                 meal['pressed_amount'] = 0
-        Clock.schedule_once(self.change_screen_to_loading, 1)
-        Clock.schedule_once(self.change_screen_to_main, 3)
+        glob.current_food_sum = {"calories": 0, "proteins": 0, "fats": 0, "carbs": 0}
+        save_data([glob.user_profile, glob.allfooditems, glob.current_food_sum, glob.food_choices, glob.diet_plan])
+        sm.clear_widgets()
+        sm.add_widget(Fitnessapp())
+        sm.add_widget(LoadingScreen())
+        sm.current = "LoadingScreen"
+        Clock.schedule_once(self.change_screen_to_main, 2)
 
     def build(self):
         # self.theme_cls.theme_style = 'Dark'

@@ -61,6 +61,8 @@
             name: "food_menu_screen"
             icon: "food-outline"
             selected_foods:selected_foods
+            helpButton: helpButton
+            on_enter: self.selected_foods.show_current()
             text: "Меню"
             MDStackLayout:
                 selected_foods:selected_foods
