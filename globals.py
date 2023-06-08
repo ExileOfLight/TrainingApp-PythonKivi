@@ -1,4 +1,4 @@
-user_profile = {"age": "22", "weight": "75", "height": "175", "gender": "m", "diet": "Upkeep"}
+user_profile = {"age": 22, "weight": 75, "height": 175, "gender": "m", "diet": "Upkeep"}
 allfooditems = [{"name": "Рис(100g)", "calories": "355",
                    "proteins": "7", "fats": "0.66",
                   "carbs": "80", "pressed_amount": 0},{"name": "Яйцо", "calories": "85.8",
