@@ -148,10 +148,11 @@ class FoodNavigationItem(MDBottomNavigationItem):
             else:
                 row.state = 'normal'
             MainApp.counter += 1
-        for _ in range(2):
-            row = ToggleFoodButton(orientation="horizontal", padding=[10, 0, 10, 0], size_hint=[1, None],
-                            _md_bg_color=[1, 1, 1, .5])
-            self.needed_list.add_widget(row)
+        if len(self.needed_list.children)==len(allFood):
+            for _ in range(2):
+                row = ToggleFoodButton(orientation="horizontal", padding=[10, 0, 10, 0], size_hint=[1, None],
+                                _md_bg_color=[1, 1, 1, .5])
+                self.needed_list.add_widget(row)
 class SelectedFoods(MDLabel):
     def show_current(self):
         current_calories = glob.current_food_sum["calories"]
