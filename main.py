@@ -233,9 +233,11 @@ class HelpButton(ToggleButton):
             if each['pressed_amount'] > 0:
                 current_pressed.add(each['name'])
         for rules_data in result: # rules_data - [набор, поддержка набора, условие правила, достоверность правила, лифт правила]
-            condition = set(rules_data[2].split(' '))
+            condition = rules_data[2].split(' ')
+            condition = [name.replace('_', ' ') for name in condition]
+            condition = set(condition)
             full_set = set(rules_data[0].split(' '))
-            if current_pressed == condition:
+            if not current_pressed.difference(condition):
                 if rules_data[4] >= 1 and len(full_set) - len(condition) == 1:
                     competition.append(rules_data)
         if len(competition)>0:
