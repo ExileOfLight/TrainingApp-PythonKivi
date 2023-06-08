@@ -5,6 +5,7 @@
             id: "calories_screen"
             name:"calories_screen"
             text:"Calories"
+            icon: 'scale-bathroom'
             on_pre_enter: root.show_recommend()
             MDFloatLayout:
                 orientation: "vertical"
@@ -57,6 +58,7 @@
             helpButton: helpButton
             id: id_food_menu_screen
             name: "food_menu_screen"
+            icon: "food-outline"
             selected_foods:selected_foods
             text: "food menu"
             on_pre_enter: self.add_forms()
@@ -101,6 +103,7 @@
             id: "add_food_menu_screen"
             name:"add_food_menu_screen"
             text:"add food"
+            icon: "food-apple"
             MDStackLayout:
                 TextInput:
                     id: name_input
@@ -151,7 +154,7 @@
             current_gender: gender_input
             name: "settings_screen"
             text:"Settings"
-            MDBoxLayout:
+            icon: "human-edit"
                 orientation: 'vertical'
                 MDStackLayout:
                     TextInput:
