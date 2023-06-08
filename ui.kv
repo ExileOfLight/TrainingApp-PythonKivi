@@ -5,6 +5,7 @@
             id: "calories_screen"
             name:"calories_screen"
             text:"Калории"
+            icon: 'scale-bathroom'
             on_pre_enter: root.show_recommend()
             MDFloatLayout:
                 orientation: "vertical"
@@ -57,6 +58,7 @@
             helpButton: helpButton
             id: id_food_menu_screen
             name: "food_menu_screen"
+            icon: "food-outline"
             selected_foods:selected_foods
             text: "Меню"
             on_pre_enter: self.add_forms()
@@ -100,6 +102,7 @@
         MDBottomNavigationItem:
             id: "add_food_menu_screen"
             name:"add_food_menu_screen"
+            icon: "food-apple"
             text:"Нов блюдо"
             MDStackLayout:
                 TextInput:
@@ -150,6 +153,7 @@
             current_height: height_input
             current_gender: gender_input
             name: "settings_screen"
+            icon: "human-edit"
             text:"Настройки"
             MDBoxLayout:
                 orientation: 'vertical'
