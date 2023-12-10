@@ -14,6 +14,7 @@ from kivymd.app import MDApp
 from kivymd.toast.kivytoast.kivytoast import toast
 from kivymd.uix.bottomnavigation import MDBottomNavigationItem
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.label import MDLabel
 from kivymd.uix.stacklayout import MDStackLayout
 
@@ -79,18 +80,21 @@ class Fitnessapp(Screen):
                                    id=str(allFood.index(meal)))
 
             values = list(meal.values())
-            bt0 = Label(text="Name\n" + str(values[0]), font_size=16, size_hint=[0.4, 1], color=[0, 0, 0, 1],
+            bt0 = Label(text="Name\n" + str(values[0]), font_size=16, size_hint=[0.3, 1], color=[0, 0, 0, 1],
                         valign="middle")
             bt0.bind(size=bt0.setter('text_size'))
             bt1 = Label(text="Kkal\n" + str(values[1]), font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
             bt2 = Label(text="Proteins\n" + str(values[2]), font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
             bt3 = Label(text="Fats\n" + str(values[3]), font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
             bt4 = Label(text="Carbs\n" + str(values[4]), font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
+            bt5 = MDRaisedButton(font_size=16, size_hint=[0.1, 1], height = "12dp")
+            bt5.bind(on_release=self.foodMenuScreen.deleteItem)
             row.add_widget(bt0)
             row.add_widget(bt1)
             row.add_widget(bt2)
             row.add_widget(bt3)
             row.add_widget(bt4)
+            row.add_widget(bt5)
             self.foodMenuScreen.needed_list.add_widget(row)
             if meal["pressed_amount"] > 0:
                 row.state = 'down'
@@ -123,10 +127,17 @@ class FoodNavigationItem(MDBottomNavigationItem):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-
+    def deleteItem(self, dltButton):
+        print(int(dltButton.parent.id))
+        # Add counter
+        glob.allfooditems.pop((int(dltButton.parent.id)))
+        print(glob.allfooditems)
+        dltButton.parent.parent.remove_widget(dltButton.parent)
     def food_help(self):
         allFood = glob.allfooditems
         for each in self.needed_list.children:
+            print(int(each.id))
+            print(allFood[-1*(int(each.id)+1)])
             if float(allFood[int(each.id)]
                      ["calories"]) * 3 < glob.needed_macros[0] and \
                     float(allFood[int(each.id)]["proteins"]) * 3 < glob.needed_macros[1] and \
