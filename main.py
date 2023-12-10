@@ -69,6 +69,7 @@ class Fitnessapp(Screen):
     def on_pre_enter(self):
         Window.size = (360, 640)
         self.add_forms()
+
     def add_forms(self):
         allFood = glob.allfooditems
         self.foodMenuScreen.needed_list.clear_widgets()
@@ -87,7 +88,7 @@ class Fitnessapp(Screen):
             bt2 = Label(text="Proteins\n" + str(values[2]), font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
             bt3 = Label(text="Fats\n" + str(values[3]), font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
             bt4 = Label(text="Carbs\n" + str(values[4]), font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
-            bt5 = MDRaisedButton(font_size=16, size_hint=[0.1, 1], height = "12dp")
+            bt5 = MDRaisedButton(font_size=16, size_hint=[0.1, 1], height="12dp")
             bt5.bind(on_release=self.foodMenuScreen.deleteItem)
             row.add_widget(bt0)
             row.add_widget(bt1)
@@ -100,6 +101,7 @@ class Fitnessapp(Screen):
                 row.state = 'down'
             else:
                 row.state = 'normal'
+
     def submit_food_click(self):
         allFood = glob.allfooditems
         try:
@@ -123,6 +125,7 @@ class Fitnessapp(Screen):
         self.ids.carbs_show.text = "carbs\n" + str(glob.current_food_sum["carbs"]) + "/" + str(glob.needed_macros[3])
         # MainApp.stop(MainApp())
 
+
 class FoodNavigationItem(MDBottomNavigationItem):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -133,18 +136,19 @@ class FoodNavigationItem(MDBottomNavigationItem):
         glob.allfooditems.pop((int(dltButton.parent.id)))
         print(glob.allfooditems)
         dltButton.parent.parent.remove_widget(dltButton.parent)
+
     def food_help(self):
         allFood = glob.allfooditems
         for each in self.needed_list.children:
             print(int(each.id))
-            print(allFood[-1*(int(each.id)+1)])
+            print(allFood[-1 * (int(each.id) + 1)])
             if float(allFood[int(each.id)]
                      ["calories"]) * 3 < glob.needed_macros[0] and \
                     float(allFood[int(each.id)]["proteins"]) * 3 < glob.needed_macros[1] and \
                     float(allFood[int(each.id)]["fats"]) * 3 < glob.needed_macros[2] and \
                     float(allFood[int(each.id)]["carbs"]) * 3 < glob.needed_macros[3] and \
                     float(allFood[int(each.id)]["carbs"]) * 4 / float(
-            allFood[int(each.id)]["calories"]) < 0.9:
+                allFood[int(each.id)]["calories"]) < 0.9:
                 if allFood[int(each.id)]["pressed_amount"] > 0:
                     each._md_bg_color = [0.7, 0.5, 0.5, 0.8]
                 else:
@@ -167,6 +171,39 @@ class FoodNavigationItem(MDBottomNavigationItem):
                 else:
                     each._md_bg_color = [1, 0, 0, 0.7]
 
+    def add_forms(self):
+        allFood = glob.allfooditems
+        self.needed_list.bind(minimum_height=self.setter("height"))
+        for meal in allFood[MainApp.counter:]:
+            row = ToggleFoodButton(orientation="horizontal", padding=[10, 0, 10, 0], size_hint=[1, None],
+                                   _md_bg_color=[1, 1, 1, .5],
+                                   id=str(allFood.index(meal)))
+
+            values = list(meal.values())
+            bt0 = Label(text="Name\n" + values[0], font_size=16, size_hint=[0.4, 1], color=[0, 0, 0, 1],
+                        valign="middle")
+            bt0.bind(size=bt0.setter('text_size'))
+            bt1 = Label(text="kkal\n" + values[1], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
+            bt2 = Label(text="proteins\n" + values[2], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
+            bt3 = Label(text="fats\n" + values[3], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
+            bt4 = Label(text="carbs\n" + values[4], font_size=16, size_hint=[0.15, 1], color=[0, 0, 0, 1])
+            row.add_widget(bt0)
+            row.add_widget(bt1)
+            row.add_widget(bt2)
+            row.add_widget(bt3)
+            row.add_widget(bt4)
+            self.needed_list.add_widget(row)
+            if meal["pressed_amount"] > 0:
+                row.state = 'down'
+            else:
+                row.state = 'normal'
+            MainApp.counter += 1
+        for _ in range(2):
+            row = ToggleFoodButton(orientation="horizontal", padding=[10, 0, 10, 0], size_hint=[1, None],
+                                   _md_bg_color=[1, 1, 1, .5])
+            self.needed_list.add_widget(row)
+
+
 class SelectedFoods(MDLabel):
     def show_current(self):
         current_calories = glob.current_food_sum["calories"]
@@ -175,6 +212,8 @@ class SelectedFoods(MDLabel):
         current_carbs = glob.current_food_sum["carbs"]
         self.text = "kkal: " + str(current_calories) + "\nproteins: " + str(
             current_proteins) + "  fats: " + str(current_fats) + "  carbs: " + str(current_carbs)
+
+
 class ToggleFoodButton(ToggleButtonBehavior, MDBoxLayout):
     def __init__(self, **kwargs):
         super(ToggleFoodButton, self).__init__(**kwargs)
@@ -197,12 +236,10 @@ class ToggleFoodButton(ToggleButtonBehavior, MDBoxLayout):
         current_carbs += round(
             float(allFood[int(self.id)]["carbs"]) * allFood[int(self.id)]["pressed_amount"] * sign)
 
-
         glob.current_food_sum["calories"] = current_calories
         glob.current_food_sum["proteins"] = current_proteins
         glob.current_food_sum["fats"] = current_fats
         glob.current_food_sum["carbs"] = current_carbs
-
 
     def on_state(self, widget, value):
         if value == 'down':
@@ -218,6 +255,7 @@ class ToggleFoodButton(ToggleButtonBehavior, MDBoxLayout):
             self.change_current_food_sum(-1)
             glob.allfooditems[int(self.id)]["pressed_amount"] = 0
             self.parent.parent.parent.parent.selected_foods.show_current()
+
 
 class HelpButton(ToggleButton):
     def on_state(self, widget, value):
@@ -244,7 +282,7 @@ class HelpButton(ToggleButton):
         for each in allFood:
             if each['pressed_amount'] > 0:
                 current_pressed.add(each['name'])
-        for rules_data in result: # rules_data - [набор, поддержка набора, условие правила, достоверность правила, лифт правила]
+        for rules_data in result:  # rules_data - [набор, поддержка набора, условие правила, достоверность правила, лифт правила]
             condition = rules_data[2].split(' ')
             condition = [name.replace('_', ' ') for name in condition]
             condition = set(condition)
@@ -252,13 +290,14 @@ class HelpButton(ToggleButton):
             if not current_pressed.difference(condition):
                 if rules_data[4] >= 1 and len(full_set) - len(condition) == 1:
                     competition.append(rules_data)
-        if len(competition)>0:
-            competitionSorted = sorted(competition, key=lambda x: x[3]+x[4])
+        if len(competition) > 0:
+            competitionSorted = sorted(competition, key=lambda x: x[3] + x[4])
             best_rule = competitionSorted.pop()
             condition = set(best_rule[2].split(' '))
             full_set = set(best_rule[0].split(' '))
             diff = full_set.difference(condition)
             self.text = str(diff.pop())
+
 
 class AmountAskPopup(Popup):
     widget = ObjectProperty(None)
@@ -274,6 +313,7 @@ class AmountAskPopup(Popup):
             self.dismiss()
         except ValueError:
             toast("Enter a valid number (rational)")
+
 
 class SettingsNavItem(MDBottomNavigationItem):
     def on_enter(self, *args):
@@ -297,21 +337,26 @@ class SettingsNavItem(MDBottomNavigationItem):
                     else:
                         glob.diet_plan["deficit"] = 0
 
-            #self.parent.parent.parent.show_recommend()
+            # self.parent.parent.parent.show_recommend()
             save_data([glob.user_profile, glob.allfooditems, glob.current_food_sum, glob.food_choices, glob.diet_plan])
         except (ValueError, TypeError):
             toast("Please fill out all the fields")
-class ButtonsDeficitChoice (MDStackLayout):
+
+
+class ButtonsDeficitChoice(MDStackLayout):
     def on_button_pressed(self, button):
         for child in self.children:
             if child != button:
-                child.md_bg_color = [0,0,0.2,0.8]
+                child.md_bg_color = [0, 0, 0.2, 0.8]
                 child.state = 'normal'
             else:
-                child.md_bg_color = [0,0,1,1]
+                child.md_bg_color = [0, 0, 1, 1]
                 child.state = 'down'
+
+
 class LoadingScreen(Screen):
     Builder.load_file("loading_screen.kv")
+
 
 class MainApp(MDApp):
     help_counter = 0
@@ -324,7 +369,7 @@ class MainApp(MDApp):
         Clock.schedule_once(self.change_screen_to_main, 2)
 
     def on_stop(self):
-        save_data([glob.user_profile, glob.allfooditems,glob.current_food_sum, glob.food_choices, glob.diet_plan])
+        save_data([glob.user_profile, glob.allfooditems, glob.current_food_sum, glob.food_choices, glob.diet_plan])
 
     def change_screen_to_main(self, dt):
         sm.current = 'FitnessApp'
@@ -365,7 +410,7 @@ def calculate_def_macros(profile, diet_plan):
     carb_perct = diet_plan["carb"]
     deficit = diet_plan["deficit"]
     stress_factor = 1
-    if profile["gender"]=="m":
+    if profile["gender"] == "m":
         def_calories = 5 + (10 * float(profile["weight"])) + (6.25 * float(profile["height"])) - (
                 5 * float(profile["age"]))
     else:
